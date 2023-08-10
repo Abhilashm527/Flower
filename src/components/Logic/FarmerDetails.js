@@ -1,6 +1,5 @@
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
-import { sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -26,7 +25,6 @@ import {
 } from '@mui/material';
 import { UserListHead, UserListToolbar } from '../../sections/@dashboard/user';
 // components
-import Label from '../label';
 import Iconify from '../iconify';
 import Scrollbar from '../scrollbar';
 // sections
@@ -306,7 +304,7 @@ console.log(filteredFarmers.length)
           Edit
         </MenuItem>
 
-        <MenuItem sx={{ color: 'error.main' }}>
+        <MenuItem sx={{ color: 'error.main' }} >
           <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
           Delete
         </MenuItem>

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 // @mui
 import { Box, Checkbox, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
-
+import '../../../styles/AddFarmers.css';
 // ----------------------------------------------------------------------
 
 const visuallyHidden = {
@@ -41,16 +41,9 @@ export default function UserListHead({
 
   return (
     <TableHead>
-      <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-          />
-        </TableCell>
+      <TableRow >
         {headLabel.map((headCell) => (
-          <TableCell
+          <TableCell 
             key={headCell.id}
             align={headCell.alignRight ? 'right' : 'left'}
             sortDirection={orderBy === headCell.id ? order : false}

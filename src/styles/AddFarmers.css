@@ -1,0 +1,41 @@
+.farmer-data
+{
+    margin: 0;
+    padding: 0;
+    width: auto;
+}
+.list-header
+{
+ width:auto;
+ justify-content: center;
+ 
+}
+.bg-color{
+ background-color: #F9FAFB;
+}
+
+.no-farmer-list{
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+
+}
+.tab
+{
+display: flex;
+justify-content: left;
+padding: 20px;
+}
+
+.added-farmer-hearder-content{
+    display: flex;
+    justify-content: center;
+
+}
+.farmer-each-data
+{
+    justify-content: center;
+}

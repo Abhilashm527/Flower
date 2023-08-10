@@ -16,11 +16,18 @@ import FarmerDetails from './components/Logic/FarmerDetails';
 
 export default function Router() {
   const routes = useRoutes([
+    // {
+    //   path: '/',
+    //   element: <LoginPage />,
+    //   index: true,
+    // },
     {
       path: '/dashboard',
       element: <DashboardLayout />,
       children: [
-        { element: <Navigate to="/dashboard/app" />, index: true },
+        // { element: <Navigate to="/dashboard/app" />, index: true },
+        // { element: <Navigate to="/login" />, index: true },
+     
         { path: 'app', element: <DashboardAppPage /> },
         { path: 'addfarmer', element: <AddFormer /> },
         { path: 'addConsumer', element: <ProductsPage /> },
@@ -31,13 +38,14 @@ export default function Router() {
       ],
     },
     {
-      path: 'login',
-      element: <LoginPage />,
-    },
-    {
       element: <SimpleLayout />,
       children: [
-        { element: <Navigate to="/dashboard/app" />, index: true },
+        {
+          path: '/',
+          element: <LoginPage />,
+          index: true,
+        },
+        { element: <Navigate to="/dashboard/app" /> },
         { path: '404', element: <Page404 /> },
         { path: '*', element: <Navigate to="/404" /> },
       ],

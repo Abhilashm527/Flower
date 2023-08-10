@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-
-import { Card, CardBody, CardTitle, CardSubtitle } from 'reactstrap';
 import axios from 'axios';
+import { TextField, Button, Typography, Container, Box } from '@mui/material';
 
 const AddFarmer = () => {
   const [userDetails, setUserDetails] = useState({
     name: '',
-    PhoneNumber: '',
-    Address: '',
+    phoneNumber: '',
+    address: '',
   });
 
   const [successMessage, setSuccessMessage] = useState('');
@@ -19,8 +18,8 @@ const AddFarmer = () => {
     const url = 'http://localhost:8080/addFarmer';
     const data = {
       name: userDetails.name,
-      PhoneNumber: userDetails.phonenumber,
-      Address: userDetails.address,
+      phoneNumber: userDetails.phoneNumber,
+      address: userDetails.address,
     };
     axios.post(url, data).then((response) => {
       if (response.status === 200) {
@@ -32,49 +31,52 @@ const AddFarmer = () => {
   };
 
   return (
-    React.createElement('div', null,
-      React.createElement('h2', null, 'ಹೊಸ ರೈತರನ್ನು ಸೇರಿಸಿ'),
-      React.createElement('h2', null, 'Add'),
-      React.createElement('form', { onSubmit: submitForm, acceptCharset: 'UTF-8' },
-        React.createElement('div', null,
-          React.createElement('label', { htmlFor: 'name', lang: 'kn' }, 'ಹೆಸರು'),
-          React.createElement('input', {
-            type: 'text',
-            id: 'name',
-            value: userDetails.name,
-            onChange: (e) => setUserDetails({ ...userDetails, name: e.target.value }),
-            required: true,
-          })
-        ),
-        React.createElement('div', null,
-          React.createElement('label', { htmlFor: 'phonenumber', lang: 'kn' }, 'ಮೊಬೈಲ್ ನಂಬರ'),
-          React.createElement('input', {
-            type: 'number',
-            id: 'phonenumber',
-            value: userDetails.phonenumber,
-            onChange: (e) => setUserDetails({ ...userDetails, phonenumber: e.target.value }),
-            required: true,
-          })
-        ),
-        React.createElement('div', null,
-          React.createElement('label', { htmlFor: 'address', lang: 'kn' }, 'ವಿಳಾಸ'),
-          React.createElement('textarea', {
-            id: 'address',
-            value: userDetails.address,
-            onChange: (e) => setUserDetails({ ...userDetails, address: e.target.value }),
-            required: true,
-          })
-        ),
-        React.createElement('div', null,
-          React.createElement('button', { type: 'submit', lang: 'kn' }, 'ಸಲ್ಲಿಸು')
-        ),
-        successMessage && (
-          React.createElement('div', null,
-            React.createElement('p', null, successMessage)
-          )
-        )
-      )
-    )
+    <Container maxWidth="sm">
+      <Box sx={{ textAlign: 'center', mt: 4 }}>
+        <Typography variant="h4">ಹೊಸ ರೈತರನ್ನು ಸೇರಿಸಿ</Typography>
+      </Box>
+      <form onSubmit={submitForm} acceptCharset="UTF-8">
+        <Box sx={{ mt: 2 }}>
+          <TextField
+            label="ಹೆಸರು"
+            fullWidth
+            value={userDetails.name}
+            onChange={(e) => setUserDetails({ ...userDetails, name: e.target.value })}
+            required
+          />
+        </Box>
+        <Box sx={{ mt: 2 }}>
+          <TextField
+            label="ಮೊಬೈಲ್ ನಂಬರ"
+            fullWidth
+            type="number"
+            value={userDetails.phoneNumber}
+            onChange={(e) => setUserDetails({ ...userDetails, phoneNumber: e.target.value })}
+            required
+          />
+        </Box>
+        <Box sx={{ mt: 2 }}>
+          <TextField
+            label="ವಿಳಾಸ"
+            fullWidth
+            multiline
+            value={userDetails.address}
+            onChange={(e) => setUserDetails({ ...userDetails, address: e.target.value })}
+            required
+          />
+        </Box>
+        <Box sx={{ mt: 2 }}>
+          <Button type="submit" variant="contained" color="primary">
+            ಸಲ್ಲಿಸು
+          </Button>
+        </Box>
+        {successMessage && (
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="body1">{successMessage}</Typography>
+          </Box>
+        )}
+      </form>
+    </Container>
   );
 };
 

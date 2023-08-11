@@ -7,11 +7,11 @@ import BlogPage from './pages/BlogPage';
 import UserPage from './pages/UserPage';
 import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
-import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import AddFormer from './components/Logic/AddFarmer';
 import FarmerDetails from './components/Logic/FarmerDetails';
 import GetFarmerDetailsById from './components/Logic/GetFarmerDayDetailsById';
+import Adddaydetails from './pages/AddDayDetails';
 
 // ----------------------------------------------------------------------
 
@@ -26,9 +26,9 @@ export default function Router() {
      
         { path: 'app', element: <DashboardAppPage /> },
         { path: 'addfarmer', element: <AddFormer /> },
-        { path: 'addConsumer', element: <ProductsPage /> },
+        { path: 'addConsumer', element: <AddFormer /> },
         { path: 'farmerDetails', element: <FarmerDetails /> },
-        { path: 'products', element: <ProductsPage /> },
+        { path: 'addDayDetails', element: <Adddaydetails /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'getFarmerDetailsById/:id', element: <GetFarmerDetailsById /> },
       ],

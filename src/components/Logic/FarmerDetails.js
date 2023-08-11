@@ -210,20 +210,23 @@ console.log(filteredFarmers.length)
                   {filteredFarmers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row,index) => {
                     const { id, name, phoneNumber, address } = row;
                     const selectedUser = selected.indexOf(id) !== -1;
-
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
                         <TableCell padding="checkbox">
                           <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, id)} />
                         </TableCell>
-                        <TableCell align="left">{id}</TableCell>
+                        <TableCell align="left">
+                          <Link to={`/dashboard/getFarmerDetailsById/${id}`} style={{ textDecoration: 'none' }}>{id}</Link>
+                        </TableCell>
                         <TableCell component="th" scope="row" padding="none">
+                          <Link to={`/dashboard/getFarmerDetailsById/${id}`} style={{ textDecoration: 'none' }}>
                           <Stack direction="row" alignItems="center" spacing={2}>
                           <Avatar alt={row.name} src={avatarImports[index % avatarImports.length]} />
                             <Typography variant="subtitle2" noWrap>
                               {name}
                             </Typography>
                           </Stack>
+                          </Link>
                         </TableCell>
                         <TableCell align="left">{address}</TableCell>
                         <TableCell align="left">{phoneNumber}</TableCell>

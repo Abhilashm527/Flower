@@ -11,16 +11,12 @@ import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import AddFormer from './components/Logic/AddFarmer';
 import FarmerDetails from './components/Logic/FarmerDetails';
+import GetFarmerDetailsById from './components/Logic/GetFarmerDayDetailsById';
 
 // ----------------------------------------------------------------------
 
 export default function Router() {
   const routes = useRoutes([
-    // {
-    //   path: '/',
-    //   element: <LoginPage />,
-    //   index: true,
-    // },
     {
       path: '/dashboard',
       element: <DashboardLayout />,
@@ -34,7 +30,7 @@ export default function Router() {
         { path: 'farmerDetails', element: <FarmerDetails /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
-        { path: 'getFarmerDetailsById/:farmerId', element: <FarmerDetails /> },
+        { path: 'getFarmerDetailsById/:id', element: <GetFarmerDetailsById /> },
       ],
     },
     {

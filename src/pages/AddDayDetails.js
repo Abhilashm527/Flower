@@ -7,12 +7,10 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  FormControlLabel,
   Input,
   Stack,
   Container,
-  Typography,
-  Paper,
+  Autocomplete,
 } from "@mui/material";
 
 const Adddaydetails = () => {
@@ -49,14 +47,24 @@ const Adddaydetails = () => {
     }
   };
 
-  const handleAutocompleteInputChange = (event) => {
-    const value = event.target.value;
-    setInputValue(value);
+  const handleAutocompleteInputChange = (event, newValue) => {
+    if (typeof newValue === "string") {
+      setInputValue(newValue);
+    } else if (newValue && newValue.inputValue) {
+      setInputValue(newValue.inputValue);
+    } else {
+      setInputValue("");
+    }
+  
+    // Search for matches in both name and ID
     const selectedFarmer = autocompleteOptions.find(
-      (option) => option.id === value
+      (option) =>
+        option.name.toLowerCase().includes(newValue.toLowerCase()) ||
+        option.id === newValue
     );
+  
     setSelectedFarmer(selectedFarmer);
-  setSelectedFarmerId(selectedFarmer ? selectedFarmer.id : "");
+    setSelectedFarmerId(selectedFarmer ? selectedFarmer.id : "");
   };
 
   const handleAddRow = () => {
@@ -102,164 +110,186 @@ const Adddaydetails = () => {
       })),
     };
     console.log(postObject);
-    
-    // Create an array of expenses with each expense object spread
+
     const expensesArray = expenses.map((expense) => ({ ...expense }));
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/addFarmerDaydetails",postObject
+        "http://localhost:8080/addFarmerDaydetails",
+        postObject
       );
       console.log("Response from server:", response.data);
     } catch (error) {
       console.error("Error submitting expenses:", error);
     }
   };
-  
 
   return (
-    <Container maxWidth="sm">
-      <form onSubmit={handleSubmit}>
-        <Stack spacing={2} sx={{ mt: 4 }}>
+    <div style={{"margin": "0",
+    "width": "auto",
+    "display": "flex"}}>
+    <Container >
+      <form onSubmit={handleSubmit} style={{ display: "flex" }}>
+        <Stack  spacing={2}
+          sx={{ mt: 4, marginRight: "16px", flexGrow: 1 }}>
           <TextField
             label="Date"
             type="datetime-local"
             value={date}
             onChange={(event) => setDate(event.target.value)}
           />
-          {expenses.map((expense, index) => (
-  <div key={index}>
-    <FormControl>
-      <InputLabel className="form-label">Search Farmer:</InputLabel>
-      <Input
-        type="text"
-        onChange={handleAutocompleteInputChange}
-        className="form-input"
-        placeholder="Search farmer..."
-      />
-      {selectedFarmer && (
-        <div>
-          <p> Farmer Name: {selectedFarmer.name}</p>
-          <p> Farmer ID: {selectedFarmer.id}</p>
-          <p> Farmer Address: {selectedFarmer.Address}</p>
-        </div>
-      )}
-    </FormControl>
-    <br />
-    <FormControl>
-      <InputLabel className="form-label">Item:</InputLabel>
-      <Select
-        value={expense.item}
-        onChange={(event) =>
-          handleExpenseChange(index, "item", event.target.value)
-        }
-        className="form-input"
-      >
-        <MenuItem value="Default Value" disabled>
-          Select an option
-        </MenuItem>
-        {dropdownOptions.map((option) => (
-          <MenuItem key={option} value={option}>
-            {option}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
-    <br />
-    <FormControl>
-      <InputLabel className="form-label">Quality:</InputLabel>
-      <Select
-        value={expense.quality}
-        onChange={(event) =>
-          handleExpenseChange(index, "quality", event.target.value)
-        }
-        className="form-input"
-      >
-        <MenuItem value="Good">Good</MenuItem>
-        <MenuItem value="Fair">Fair</MenuItem>
-        <MenuItem value="Poor">Poor</MenuItem>
-      </Select>
-    </FormControl>
-    <br />
-    <FormControl>
-      <InputLabel className="form-label">Cash/Quantity:</InputLabel>
-      <Select
-        value={expense.isCash ? "Cash" : "Quantity"}
-        onChange={() => handleToggle(index)}
-        className="form-input"
-      >
-        <MenuItem value="Quantity">Quantity</MenuItem>
-        <MenuItem value="Cash">Cash</MenuItem>
-      </Select>
-    </FormControl>
-    <br />
-    {expense.isCash ? (
-      <div>
-        <FormControl>
-          <InputLabel className="form-label">Amount:</InputLabel>
-          <Input
-            type="text"
-            value={`Rs ${expense.amount}`}
-            onChange={(event) =>
-              handleExpenseChange(
-                index,
-                "amount",
-                event.target.value.substring(3)
-              )
-            }
-            className="form-input"
-          />
-        </FormControl>
-      </div>
-    ) : (
-      <div>
-        <FormControl>
-          <InputLabel className="form-label">Quantity:</InputLabel>
-          <Input
-            type="number"
-            step="0.01"
-            value={expense.amount}
-            onChange={(event) =>
-              handleExpenseChange(index, "amount", event.target.value)
-            }
-            className="form-input"
-          />
-        </FormControl>
-      </div>
-    )}
-    <br />
-    <Button
-      type="button"
-      onClick={() => handleDeleteRow(index)}
-      variant="contained"
-      color="secondary"
-    >
-      Delete Row
-    </Button>
-    <hr className="form-hr" />
-  </div>
-))}
+          <FormControl>
+          <Autocomplete
+  options={autocompleteOptions}
+  getOptionLabel={(option) => `${option.id} - ${option.name}`}
+  renderInput={(params) => (
+    <TextField
+      {...params}
+      label="Search Farmer:"
+      className="form-input"
+      placeholder="Search farmer..."
+      required
+    />
+  )}
+  value={selectedFarmer}
+  onChange={(event, newValue) => {
+    setSelectedFarmer(newValue);
+    setSelectedFarmerId(newValue ? newValue.id : "");
+  }}
+/>
 
+          </FormControl>
+          {expenses.map((expense, index) => (
+            <div key={index} style={{ display: 'flex', flexDirection: 'row', gap: '8px', alignItems: 'center' }}>
+              <FormControl>
+                <InputLabel className="form-label">Item:</InputLabel>
+                <Select
+                  value={expense.item}
+                  onChange={(event) =>
+                    handleExpenseChange(index, "item", event.target.value)
+                  }
+                  className="form-input"
+                >
+                  <MenuItem value="Default Value" disabled>
+                    Select an option
+                  </MenuItem>
+                  {dropdownOptions.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl>
+                <InputLabel className="form-label">Quality:</InputLabel>
+                <Select
+                  value={expense.quality}
+                  onChange={(event) =>
+                    handleExpenseChange(index, "quality", event.target.value)
+                  }
+                  required
+                  className="form-input"
+                >
+                  <MenuItem value="Good">Good</MenuItem>
+                  <MenuItem value="Fair">Fair</MenuItem>
+                  <MenuItem value="Poor">Poor</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl>
+                <InputLabel className="form-label">Cash/Quantity:</InputLabel>
+                <Select
+                  value={expense.isCash ? "Cash" : "Quantity"}
+                  onChange={() => handleToggle(index)}
+                  className="form-input"
+                  required
+                >
+                  <MenuItem value="Quantity">Quantity</MenuItem>
+                  <MenuItem value="Cash">Cash</MenuItem>
+                </Select>
+              </FormControl>
+              {expense.isCash ? (
+                <FormControl>
+                  <InputLabel className="form-label">Amount:</InputLabel>
+                  <Input
+                    type="text"
+                    value={`Rs ${expense.amount}`}
+                    onChange={(event) =>
+                      handleExpenseChange(
+                        index,
+                        "amount",
+                        event.target.value.substring(3)
+                      )
+                    }
+                    className="form-input"
+                    required
+                  />
+                </FormControl>
+              ) : (
+                <FormControl>
+                  <InputLabel className="form-label">Quantity:</InputLabel>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={expense.amount}
+                    onChange={(event) =>
+                      handleExpenseChange(index, "amount", event.target.value)
+                    }
+                    className="form-input"
+                    required
+                  />
+                </FormControl>
+              )}
+              <Button
+                type="button"
+                onClick={() => handleDeleteRow(index)}
+                variant="contained"
+                color="secondary"
+              >
+                Delete Row
+              </Button>
+              <hr className="form-hr" style={{ height: '24px', alignSelf: 'center' }} />
+            </div>
+          ))}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Button
+              type="button"
+              onClick={handleAddRow}
+              variant="contained"
+              color="primary"
+              className="add-button"
+            >
+              +
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              className="form-button"
+            >
+              Submit
+            </Button>
+          </div>
         </Stack>
-        <Button
-  type="button"
-  onClick={handleAddRow}
-  variant="contained"
-  color="primary"
-  className="add-button"
->
-  +
-</Button>
-<Button
-  type="submit"
-  variant="contained"
-  color="primary"
-  className="form-button"
->
-  Submit
-</Button>
       </form>
     </Container>
+    <>
+     <div style={{"display": "flex",
+        "justify-content": "center",
+        "align-items": "center",
+        "width": "60%"}}>
+     {selectedFarmer && (
+       <div >
+         {/* Display additional farmer details to the right */}
+         <h2>Farmer Details</h2>
+         <p>Name: {selectedFarmer.name}</p>
+         <p>ID: {selectedFarmer.id}</p>
+         <p>Address: {selectedFarmer.address}</p>
+       </div>
+       
+     )}
+     </div>
+     </>
+     </div>
   );
 };
 

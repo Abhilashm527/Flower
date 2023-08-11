@@ -8,6 +8,8 @@ import {
   Table,
   Button,
   Select,
+  Snackbar,
+  Alert,
   Box,
   Menu,
   MenuItem,
@@ -52,6 +54,7 @@ const AddFarmer = () => {
   const [editMode, setEditMode] = useState(false);
   const [selectedFarmer, setSelectedFarmer] = useState(null);
   const [successAddedMessage, setSuccessAddedMessage] = useState(null);
+  const [isSuccessSnackbarOpen, setIsSuccessSnackbarOpen] = useState(false);
   const handleEditClick = (farmer) => {
     setSelectedFarmer(farmer);
     setUserDetails({
@@ -84,10 +87,11 @@ const AddFarmer = () => {
       if (response.status === 200) {
         setFarmersData([response.data]);
         setSuccessAddedMessage('Edit successful');
-        console.log(response.data);
         setAddedFarmers([...addedFarmers, { ...userDetails }]);
         setUserDetails({ name: '', phoneNumber: '', address: '' });
-        setSuccessMessage('Farmer added successfully');
+
+        // Show success snackbar
+        setIsSuccessSnackbarOpen(true);
       } else {
         alert('An error occurred');
       }
@@ -209,19 +213,15 @@ const AddFarmer = () => {
                             </Typography>
                           </Stack>
                         </TableCell>
-                        <TableCell align="center">
-      {successMessage && (
-        <div style={{ backgroundColor: 'green', padding: '5px', color: 'white' }}>
-          {successMessage}
-        </div>
-      )}
-      <IconButton size="large">
-        <Iconify icon={'eva:more-vertical-fill'} />
-        <Menu>
-          <MenuItem onClick={() => handleEditClick(farmer)}>Edit</MenuItem>
-        </Menu>
-      </IconButton>
-    </TableCell>
+                        <Snackbar
+          open={isSuccessSnackbarOpen}
+          autoHideDuration={3000} // Adjust the duration as needed
+          onClose={() => setIsSuccessSnackbarOpen(false)}
+        >
+          <Alert severity="success">
+            Farmer added successfully
+          </Alert>
+        </Snackbar>
                       </TableRow>
                     </React.Fragment>
                   ))}

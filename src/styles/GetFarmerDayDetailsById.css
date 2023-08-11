@@ -68,3 +68,31 @@
   border-color: #007bff;
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
+@media print {
+  /* Adjust the page margins */
+  @page {
+    size: auto;
+    margin: 10mm; /* Adjust as needed */
+  }
+
+  /* Style the printed table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 4px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f2f2f2;
+  }
+
+  /* Hide unnecessary elements */
+  .container, .back-link, .date-range-picker, .MuiButton-root {
+    display: none;
+  }
+}

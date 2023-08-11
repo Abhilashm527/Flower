@@ -37,7 +37,8 @@ const TABLE_HEAD = [{ id: '' },
   { id: 'id', label: 'Id', alignRight: false },
   { id: 'name', label: 'Name', alignRight: false },
   { id: 'address', label: 'Address', alignRight: false },
-  { id: 'phoneNumber', label: 'PhoneNumber', alignRight: false },
+  { id: 'addData', label: 'Add Data', alignRight: false },
+  { id: 'genrateBill', label: 'Generate Bill', alignRight: false },
   { id: '' },
 ];
 
@@ -229,7 +230,16 @@ console.log(filteredFarmers.length)
                           </Link>
                         </TableCell>
                         <TableCell align="left">{address}</TableCell>
-                        <TableCell align="left">{phoneNumber}</TableCell>
+                        <TableCell>
+                        <Link to={{pathname: `/dashboard/addDayDetails`, state: { row } }} style={{ textDecoration: 'none' }}>
+                        <Button  type="submit" variant="contained" color="primary" className="form-button" >Add Data</Button>
+                       </Link>
+                        </TableCell>
+                        <TableCell>
+                        <Link to={`/dashboard/getFarmerDetailsById/${id}`} style={{ textDecoration: 'none' }}>
+                        <Button  type="submit" variant="contained" color="primary" className="form-button" >Generate Bill</Button>
+                       </Link>
+                        </TableCell>
                         <TableCell align="right">
                           <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
                             <Iconify icon={'eva:more-vertical-fill'} />

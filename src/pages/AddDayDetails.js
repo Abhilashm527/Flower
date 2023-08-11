@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import '../styles/AddDayDetails.css'
+import { useLocation } from 'react-router-dom';
+
 import {
   TextField,
   Button,
   Select,
+  Avatar,
   MenuItem,
+  Typography,
   FormControl,
   InputLabel,
   Input,
   Stack,
   Container,
   Autocomplete,
+  Grid,
 } from "@mui/material";
 
 const Adddaydetails = () => {
@@ -18,24 +24,34 @@ const Adddaydetails = () => {
   const istOffset = 5.5 * 60 * 60 * 1000;
   const istDateTime = new Date(now.getTime() + istOffset);
   const formattedDateTime = istDateTime.toISOString().slice(0, 16);
-
+  const [avatarImports, setAvatarImports] = useState([]); 
   const [date, setDate] = useState(formattedDateTime);
   const [autocompleteOptions, setAutocompleteOptions] = useState([]);
   const [selectedFarmer, setSelectedFarmer] = useState(null);
   const [inputValue, setInputValue] = useState("");
   const [selectedFarmerId, setSelectedFarmerId] = useState("");
+  const [avatarIndex, setAvatarIndex] = useState(null);
   const dropdownOptions = ["Option 1", "Option 2", "Option 3"];
   const [expenses, setExpenses] = useState([
     {
       item: "Option 1",
       quality: "Good",
       amount: "",
-      isCash: true,
+      isCash: false,
     },
   ]);
 
+  // Access the selected farmer from the location state
+
   useEffect(() => {
     fetchAutocompleteOptions();
+    const avatarPromises = Array.from({ length: 14 }, (_, i) =>
+  import(`../../public/assets/images/avatars/avatar_${i + 1}.jpg`).then((module) => module.default)
+);
+
+Promise.all(avatarPromises).then((avatars) => {
+  setAvatarImports(avatars);
+});
   }, []);
 
   const fetchAutocompleteOptions = async () => {
@@ -62,7 +78,6 @@ const Adddaydetails = () => {
         option.name.toLowerCase().includes(newValue.toLowerCase()) ||
         option.id === newValue
     );
-  
     setSelectedFarmer(selectedFarmer);
     setSelectedFarmerId(selectedFarmer ? selectedFarmer.id : "");
   };
@@ -72,7 +87,7 @@ const Adddaydetails = () => {
       item: "Option 1",
       quality: "Good",
       amount: "",
-      isCash: true,
+      isCash: false,
     };
     setExpenses([...expenses, defaultExpense]);
   };
@@ -125,10 +140,11 @@ const Adddaydetails = () => {
   };
 
   return (
-    <div style={{"margin": "0",
-    "width": "auto",
-    "display": "flex"}}>
+    <div className="add-farmer-details">
     <Container >
+    <Typography variant="h4" gutterBottom>
+            Add Farmer details
+          </Typography>
       <form onSubmit={handleSubmit} style={{ display: "flex" }}>
         <Stack  spacing={2}
           sx={{ mt: 4, marginRight: "16px", flexGrow: 1 }}>
@@ -151,19 +167,26 @@ const Adddaydetails = () => {
       required
     />
   )}
-  value={selectedFarmer}
+  value={selectedFarmer} // This should be the selectedFarmer state
   onChange={(event, newValue) => {
-    setSelectedFarmer(newValue);
-    setSelectedFarmerId(newValue ? newValue.id : "");
+    if (newValue) {
+      setSelectedFarmer(newValue);
+      setSelectedFarmerId(newValue.id);
+    } else {
+      setSelectedFarmer(null); // Clear the selectedFarmer if nothing is selected
+      setSelectedFarmerId("");
+    }
   }}
 />
 
+
           </FormControl>
           {expenses.map((expense, index) => (
-            <div key={index} style={{ display: 'flex', flexDirection: 'row', gap: '8px', alignItems: 'center' }}>
+            <div key={index} style={{ display: 'flex', flexDirection: 'row', gap: '13px', alignItems: 'center' }}>
               <FormControl>
                 <InputLabel className="form-label">Item:</InputLabel>
                 <Select
+                  label="Item"
                   value={expense.item}
                   onChange={(event) =>
                     handleExpenseChange(index, "item", event.target.value)
@@ -183,6 +206,7 @@ const Adddaydetails = () => {
               <FormControl>
                 <InputLabel className="form-label">Quality:</InputLabel>
                 <Select
+                  label="Quality"
                   value={expense.quality}
                   onChange={(event) =>
                     handleExpenseChange(index, "quality", event.target.value)
@@ -198,6 +222,7 @@ const Adddaydetails = () => {
               <FormControl>
                 <InputLabel className="form-label">Cash/Quantity:</InputLabel>
                 <Select
+                  label="Cash/Quantity:"
                   value={expense.isCash ? "Cash" : "Quantity"}
                   onChange={() => handleToggle(index)}
                   className="form-input"
@@ -211,6 +236,7 @@ const Adddaydetails = () => {
                 <FormControl>
                   <InputLabel className="form-label">Amount:</InputLabel>
                   <Input
+                    label="Cash:"
                     type="text"
                     value={`Rs ${expense.amount}`}
                     onChange={(event) =>
@@ -228,6 +254,7 @@ const Adddaydetails = () => {
                 <FormControl>
                   <InputLabel className="form-label">Quantity:</InputLabel>
                   <Input
+                    label="Quantity:"
                     type="number"
                     step="0.01"
                     value={expense.amount}
@@ -243,14 +270,14 @@ const Adddaydetails = () => {
                 type="button"
                 onClick={() => handleDeleteRow(index)}
                 variant="contained"
-                color="secondary"
+                color="primary"
               >
                 Delete Row
               </Button>
-              <hr className="form-hr" style={{ height: '24px', alignSelf: 'center' }} />
+              
             </div>
           ))}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
             <Button
               type="button"
               onClick={handleAddRow}
@@ -258,7 +285,7 @@ const Adddaydetails = () => {
               color="primary"
               className="add-button"
             >
-              +
+             Add Row +
             </Button>
             <Button
               type="submit"
@@ -272,15 +299,12 @@ const Adddaydetails = () => {
         </Stack>
       </form>
     </Container>
-    <>
-     <div style={{"display": "flex",
-        "justify-content": "center",
-        "align-items": "center",
-        "width": "60%"}}>
+    < div className="farmer-details-main" >
+     <div  className="farmer-detail">
      {selectedFarmer && (
        <div >
-         {/* Display additional farmer details to the right */}
          <h2>Farmer Details</h2>
+         <Avatar alignItems="center" alt={selectedFarmer.name}  style={{ width: '80px', height: '80px' }}  src={avatarImports[Math.floor(Math.random() * avatarImports.length)]} />
          <p>Name: {selectedFarmer.name}</p>
          <p>ID: {selectedFarmer.id}</p>
          <p>Address: {selectedFarmer.address}</p>
@@ -288,7 +312,7 @@ const Adddaydetails = () => {
        
      )}
      </div>
-     </>
+     </div>
      </div>
   );
 };

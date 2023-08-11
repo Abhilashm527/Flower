@@ -1,0 +1,34 @@
+
+
+.add-farmer-details{
+    margin: 0;
+    width: auto;
+    display: flex;
+}
+.farmer-details-main
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
+}
+.farmer-detail{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+@media only screen and (max-width: 600px){
+    .add-farmer-details{
+        margin: 0;
+        width: auto;
+        display: flex;
+        flex-direction: column-reverse;
+
+    }
+    .farmer-details-main{
+        width: 100%;
+        font-size: 60%;
+    }
+
+}

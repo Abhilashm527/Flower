@@ -42,5 +42,4 @@ const BillDialog = ({ open, onClose, billData }) => {
     </Dialog>
   );
 };
-
 export default BillDialog;

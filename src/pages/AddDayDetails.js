@@ -16,6 +16,13 @@ import {
   Stack,
   Container,
   Autocomplete,
+  Table,
+  TableCell,
+  TableBody,
+  TableContainer,
+  TableRow,
+  Paper,
+  TableHead,
   Grid,
 } from "@mui/material";
 
@@ -30,8 +37,11 @@ const Adddaydetails = () => {
   const [selectedFarmer, setSelectedFarmer] = useState(null);
   const [inputValue, setInputValue] = useState("");
   const [selectedFarmerId, setSelectedFarmerId] = useState("");
-  const [avatarIndex, setAvatarIndex] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [searchfarmer, setSearchfarmer] = useState({});
   const dropdownOptions = ["Option 1", "Option 2", "Option 3"];
+  let lastRenderedDate = null;
   const [expenses, setExpenses] = useState([
     {
       item: "Option 1",
@@ -45,6 +55,7 @@ const Adddaydetails = () => {
 
   useEffect(() => {
     fetchAutocompleteOptions();
+    fetchAllFarmerDetails();
     const avatarPromises = Array.from({ length: 14 }, (_, i) =>
   import(`../../public/assets/images/avatars/avatar_${i + 1}.jpg`).then((module) => module.default)
 );
@@ -54,6 +65,19 @@ Promise.all(avatarPromises).then((avatars) => {
 });
   }, []);
 
+  const fetchAllFarmerDetails = async () => {
+    const url = `http://localhost:8080/getFarmerAllFarmersDetails`;
+    axios
+      .get(url)
+      .then((response) => {
+        const sortedDetails = response.data.sort((a, b) => new Date(b.date) - new Date(a.date));
+        setSearchfarmer(sortedDetails);
+      })
+      .catch((error) => {
+        console.error('Error fetching farmer details:', error);
+      });
+  };
+
   const fetchAutocompleteOptions = async () => {
     try {
       const response = await axios.get("http://localhost:8080/getAllFarmers");
@@ -61,6 +85,14 @@ Promise.all(avatarPromises).then((avatars) => {
     } catch (error) {
       console.error("Error fetching autocomplete options:", error);
     }
+  };
+
+  const handleChangeStartDate = (event) => {
+    setStartDate(event.target.value);
+  };
+
+  const handleChangeEndDate = (event) => {
+    setEndDate(event.target.value);
   };
 
   const handleAutocompleteInputChange = (event, newValue) => {
@@ -133,6 +165,7 @@ Promise.all(avatarPromises).then((avatars) => {
         "http://localhost:8080/addFarmerDaydetails",
         postObject
       );
+      fetchAllFarmerDetails();
       console.log("Response from server:", response.data);
     } catch (error) {
       console.error("Error submitting expenses:", error);
@@ -299,17 +332,79 @@ Promise.all(avatarPromises).then((avatars) => {
         </Stack>
       </form>
     </Container>
-    < div className="farmer-details-main" >
-     <div  className="farmer-detail">
-     {selectedFarmer && (
-       <div >
+    < div className="container" >
+     <div> 
+         {selectedFarmer && (
+         <div className="farmer-detail">
          <h2>Farmer Details</h2>
          <Avatar alignItems="center" alt={selectedFarmer.name}  style={{ width: '80px', height: '80px' }}  src={avatarImports[Math.floor(Math.random() * avatarImports.length)]} />
          <p>Name: {selectedFarmer.name}</p>
          <p>ID: {selectedFarmer.id}</p>
          <p>Address: {selectedFarmer.address}</p>
-       </div>
-       
+         <div className="date-range-picker"> 
+      <h4 style={{"color":"gray"}}>Select the Date Range : </h4>
+      <InputLabel style={{"margin-left":"15px"}} htmlFor="start-date">From:</InputLabel>
+        <TextField
+          type="date"
+          id="start-date"
+          value={startDate}
+          onChange={handleChangeStartDate}
+        />
+        <InputLabel style={{"margin-left":"15px"}} htmlFor="end-date">To:</InputLabel>
+        <TextField
+          type="date"
+          id="end-date"
+          value={endDate}
+          onChange={handleChangeEndDate}
+        />
+      </div>
+        <TableContainer component={Paper} className="table-container">
+        <Table>
+       <TableHead>
+            <TableRow>
+              <TableCell>Date</TableCell>
+              <TableCell>Item</TableCell>
+              <TableCell>Quality</TableCell>
+              <TableCell>Cash/Quantity</TableCell>
+              <TableCell>Amount</TableCell>
+            </TableRow>
+          </TableHead>
+        <TableBody>
+        {searchfarmer.length > 0 ? (
+  searchfarmer.map((detail, index) => {
+    const currentDate = new Date(detail.date).toLocaleDateString();
+    const renderDateCell = lastRenderedDate !== currentDate;
+    lastRenderedDate = currentDate;
+    const startDateObject = new Date(startDate);
+    const endDateObject = new Date(endDate);
+
+    if (
+      detail.farmerId === selectedFarmer.id &&
+      currentDate >= startDateObject.toLocaleDateString() &&
+      currentDate <= endDateObject.toLocaleDateString()
+    ) {
+      return (
+        <TableRow key={index}>
+          <TableCell>{renderDateCell && currentDate}</TableCell>
+          <TableCell>{detail.item}</TableCell>
+          <TableCell>{detail.quality}</TableCell>
+          <TableCell>{detail.isCash ? 'Cash' : 'Quantity'}</TableCell>
+          <TableCell>{detail.amount}</TableCell>
+        </TableRow>
+      );
+    }
+    return null;
+  })
+) : (
+  <TableRow>
+    <TableCell colSpan={5}>No data available</TableCell>
+  </TableRow>
+)}
+
+          </TableBody>
+      </Table>
+      </TableContainer>
+      </div>
      )}
      </div>
      </div>

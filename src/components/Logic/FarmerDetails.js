@@ -3,6 +3,8 @@ import { filter } from 'lodash';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import '../../styles/AddDayDetails.css'
+
 // @mui
 import {
   Card,
@@ -193,8 +195,12 @@ console.log(filteredFarmers.length)
         </Stack>
 
         <Card>
-          <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
-
+        <Stack className='search-genrate-bill' direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+        <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+        <Button  variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+            Generate All Farmer's Bill
+          </Button>
+          </Stack>
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>

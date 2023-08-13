@@ -59,4 +59,4 @@ jobs:
           app-name: 'smfbillingfe'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_0FCA26433968413DA8EE1EC7DBC47D2E }}
-          package: .
+          package: release.zip

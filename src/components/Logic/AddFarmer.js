@@ -11,7 +11,6 @@ import {
   Snackbar,
   Alert,
   Box,
-  Menu,
   MenuItem,
   Stack,
   Avatar,
@@ -20,12 +19,10 @@ import {
   TableCell,
   Container,
   Typography,
-  IconButton,
   TableContainer,
 } from '@mui/material';
-import { UserListHead, UserListToolbar } from '../../sections/@dashboard/user';
+import { UserListHead } from '../../sections/@dashboard/user';
 import Scrollbar from '../scrollbar';
-import Iconify from '../iconify';
 
 const AddFarmer = () => {
   const [userDetails, setUserDetails] = useState({
@@ -51,25 +48,8 @@ const AddFarmer = () => {
   const [avatarImports, setAvatarImports] = useState([]); 
   const [addedFarmers, setAddedFarmers] = useState([]);
   const [farmerData, setFarmersData] = useState([]);
-  const [editMode, setEditMode] = useState(false);
-  const [selectedFarmer, setSelectedFarmer] = useState(null);
-  const [successAddedMessage, setSuccessAddedMessage] = useState(null);
+
   const [isSuccessSnackbarOpen, setIsSuccessSnackbarOpen] = useState(false);
-  const handleEditClick = (farmer) => {
-    setSelectedFarmer(farmer);
-    setUserDetails({
-      name: farmer.name,
-      phoneNumber: farmer.phoneNumber,
-      address: farmer.address,
-    });
-    setEditMode(true);
-  };
-  const handlePhoneNumberChange = (e) => {
-    const inputPhoneNumber = e.target.value.replace(/\D/g, ''); // Remove non-numeric characters
-    if (inputPhoneNumber.length <= 10) {
-      setUserDetails({ ...userDetails, phoneNumber: inputPhoneNumber });
-    }
-  };
   
 
   const submitForm = (event) => {
@@ -86,7 +66,6 @@ const AddFarmer = () => {
     axios.post(url, data).then((response) => {
       if (response.status === 200) {
         setFarmersData([response.data]);
-        setSuccessAddedMessage('Edit successful');
         setAddedFarmers([...addedFarmers, { ...userDetails }]);
         setUserDetails({ name: '', phoneNumber: '', address: '' });
 

@@ -66,7 +66,7 @@ Promise.all(avatarPromises).then((avatars) => {
   }, []);
 
   const fetchAllFarmerDetails = async () => {
-    const url = `http://localhost:8080/getFarmerAllFarmersDetails`;
+    const url = `https://smfbilling.azurewebsites.net/getFarmerAllFarmersDetails`;
     axios
       .get(url)
       .then((response) => {
@@ -80,7 +80,7 @@ Promise.all(avatarPromises).then((avatars) => {
 
   const fetchAutocompleteOptions = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/getAllFarmers");
+      const response = await axios.get("https://smfbilling.azurewebsites.net/getAllFarmers");
       setAutocompleteOptions(response.data);
     } catch (error) {
       console.error("Error fetching autocomplete options:", error);
@@ -162,7 +162,7 @@ Promise.all(avatarPromises).then((avatars) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/addFarmerDaydetails",
+        "https://smfbilling.azurewebsites.net/addFarmerDaydetails",
         postObject
       );
       fetchAllFarmerDetails();

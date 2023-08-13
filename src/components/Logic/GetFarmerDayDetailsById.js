@@ -29,7 +29,7 @@ const GetFarmerDetailsById = () => {
     setShowBill(true);
   };
   useEffect(() => {
-    const url = `http://localhost:8080/getFarmerDetailsById/${id}`;
+    const url = `https://smfbilling.azurewebsites.net/getFarmerDetailsById/${id}`;
     axios
       .get(url)
       .then((response) => {

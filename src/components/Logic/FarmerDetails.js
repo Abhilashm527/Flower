@@ -98,7 +98,7 @@ export default function UserPage() {
 const [avatarImports, setAvatarImports] = useState([]); 
 const [error, setError] = useState(null);
 useEffect(() => {
-  const url = 'http://localhost:8080/getAllFarmers';
+  const url = 'https://smfbilling.azurewebsites.net/getAllFarmers';
   axios
     .get(url)
     .then((response) => {
